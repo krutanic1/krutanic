@@ -57,13 +57,26 @@ const app = express();
 // }
 
 // ✅ MIDDLEWARES
-const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : [];
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : [];
+
+// Handle preflight requests first
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  if (!origin || allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+  res.sendStatus(204);
+});
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.some(allowed => allowed.trim() === origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true); 
     } else {
-      console.log('CORS blocked origin:', origin);
+      console.log('CORS blocked origin:', origin, 'Allowed:', allowedOrigins);
       callback(new Error('Not allowed by CORS')); 
     }
   },
@@ -71,20 +84,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
-
-
-app.use((err, req, res, next) => {
-  if (err) {
-    console.error(err.message);
-    res.status(500).json({ error: err.message });
-  } else {
-    next();
-  }
-});
-
-app.options('*', (req, res) => {
-  res.sendStatus(204); 
-});
 
 app.use(bodyParser.json());
 app.use(cookieParser());
