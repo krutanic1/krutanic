@@ -57,12 +57,13 @@ const app = express();
 // }
 
 // ✅ MIDDLEWARES
-const allowedOrigins = process.env.FRONTEND_URL
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : [];
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.some(allowed => allowed.trim() === origin)) {
       callback(null, true); 
     } else {
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS')); 
     }
   },
