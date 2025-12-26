@@ -12,7 +12,7 @@ const crypto = require('crypto');
 const { default: mongoose } = require("mongoose");
 const User = require("../models/User");
 const Alumni = require("../models/Alumni");
-// const VerifyAdminCookie = require("../middleware/verifyAdminCookie");
+const verifyAdminCookie = require("../middleware/verifyAdminCookie");
 
 
 // Route to save admin email
@@ -106,14 +106,14 @@ router.post("/otpverify",expressAsyncHandler(async (req, res) => {
         { expiresIn: "1h" } 
       );
 
-    //     res.cookie("adminToken", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "Strict",
-    //   maxAge: 60 * 60 * 1000 // 1 hour
-    // });
+      res.cookie("adminToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        maxAge: 60 * 60 * 1000 // 1 hour
+      });
 
-      res.status(200).json({ message: "OTP verified successfully" , token });
+      res.status(200).json({ message: "OTP verified successfully", token });
     } catch (error) {
       res.status(500).json({ message: "Failed to verify OTP", error: error.message });
     }
@@ -469,9 +469,19 @@ router.get("/alumni-data", async (req, res) => {
   }
 });
 
+// Route to check if admin is authenticated
+router.get("/admin/is-authenticated", verifyAdminCookie, (req, res) => {
+  res.status(200).json({ isAuthenticated: true, admin: req.admin });
+});
 
-
-
-
+// Route to logout admin
+router.post("/admin/logout", (req, res) => {
+  res.clearCookie("adminToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+});
 
 module.exports = router;

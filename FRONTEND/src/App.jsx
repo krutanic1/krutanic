@@ -113,7 +113,7 @@ import MarketingDashboard from "./Marketing/MarketingDashboard";
 import MarketingPrePayment from "./Marketing/MarketingPrePayment";
 import MarketingLeads from "./Marketing/MarketingLeads";
 import MarketingAddExecutive from "./Marketing/MarketingAddExecutive";
-// import BDAAgainLogin from "./BDA/BDAAgainLogin";
+import BDAAgainLogin from "./BDA/BDAAgainLogin";
 
 const App = () => {
   return (
@@ -236,14 +236,14 @@ const AppContent = () => {
 
   const lmsFooterPaths = ['/dashboard','/enrolledcourses','/learning','/setting','/jobboard','/myjob'];
 
-  const isAuthenticated = () => true; //!!localStorage.getItem("token");
-  const isAuthenticatedBda = () => true; // !!localStorage.getItem("bdaToken");
-  const isAuthenticatedOperation = () => true; // !!localStorage.getItem("operationToken");
-  const isAuthenticatedAdmin = () => true; // !!localStorage.getItem("adminToken");
+  const isAuthenticated = () =>!!localStorage.getItem("token");
+  const isAuthenticatedBda = () => !!localStorage.getItem("bdaToken");
+  const isAuthenticatedOperation = () => !!localStorage.getItem("operationToken");
+  const isAuthenticatedAdmin = () => !!localStorage.getItem("adminToken");
 
-  const isAuthenticatedPC = () => true; // !!localStorage.getItem("pctoken");
-  const isAuthenticatedEventUser = () => true; //!!localStorage.getItem("eventToken");
-  const isAuthenticatedMarketing = () => true; //!!localStorage.getItem("marketingToken");
+  const isAuthenticatedPC = () => !!localStorage.getItem("pctoken");
+  const isAuthenticatedEventUser = () =>!!localStorage.getItem("eventToken");
+  const isAuthenticatedMarketing = () =>!!localStorage.getItem("marketingToken");
 
   return (
     <div>
@@ -339,7 +339,7 @@ const AppContent = () => {
 
         {/* bda panel start */}
           <Route path="/TeamLogin" element={<TeamLogin />} />
-          {/* <Route path="/BDAAgainLogin" element={<BDAAgainLogin/>} /> */}
+          <Route path="/BDAAgainLogin" element={<BDAAgainLogin/>} />
           <Route path="/Home" element={ isAuthenticatedBda() ? <Home /> : <Navigate to="/TeamLogin"/>} />
           <Route path="/FullPaid" element={isAuthenticatedBda() ?<FullPaid /> : <Navigate to="/TeamLogin"/>} />
           <Route path="/Default" element={isAuthenticatedBda() ?<Default /> : <Navigate to="/TeamLogin"/>} />

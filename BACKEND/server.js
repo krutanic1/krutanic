@@ -25,7 +25,7 @@ const MasterClass = require("./routes/MasterClass")
 const AddEvent = require("./routes/AddEvent")
 const Certificate = require("./routes/Certificate")
 const ReferAndEarn = require("./routes/ReferAndEarn");
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const os = require("os");
 // const https = require("https")
 
@@ -86,6 +86,7 @@ app.options('*', (req, res) => {
 });
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 const PORT = process.env.PORT || 5000;
 // const DB_URI = process.env.DB_URI;
 
