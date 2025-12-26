@@ -89,7 +89,14 @@ if (student.lead === "CGFL") {
     totalRevenue += revenue;
   });
 
-  const months = Object.keys(revenueByMonth).sort((a, b) => new Date(b) - new Date(a));
+  // Generate all 12 months of the current year
+  const currentYear = new Date().getFullYear();
+  const months = [];
+  for (let i = 11; i >= 0; i--) {
+    const date = new Date(currentYear, i, 1);
+    months.push(date.toLocaleString("default", { month: "long", year: "numeric" }));
+  }
+  
   const currentMonth = new Date().toLocaleString("default", { month: "long", year: "numeric" });
   const filteredDailyRevenue = Object.entries(revenueByDay).filter(
     ([, data]) => data.month === (selectedMonth || currentMonth)
@@ -210,17 +217,20 @@ if (student.lead === "CGFL") {
               </tr>
             </thead>
             <tbody>
-              {months.map((month, index) => (
-                <tr key={month} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                  <td className="border p-3">{month}</td>
-                  <td className="border p-3">₹{revenueByMonth[month].total.toFixed(2)}</td>
-                  <td className="border p-3">₹{revenueByMonth[month].credited.toFixed(2)}</td>
-                  <td className="border p-3">₹{revenueByMonth[month].pending.toFixed(2)}</td>
-                  <td className="border p-3">{revenueByMonth[month].payments}</td>
-                  <td className="border p-3">{revenueByMonth[month].paymentsByLead?.CGFL || 0}</td>
-                  <td className="border p-3">{revenueByMonth[month].paymentsByLead?.SGFL || 0}</td>
-                </tr>
-              ))}
+              {months.map((month, index) => {
+                const monthData = revenueByMonth[month] || { total: 0, credited: 0, pending: 0, payments: 0, paymentsByLead: { CGFL: 0, SGFL: 0 } };
+                return (
+                  <tr key={month} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                    <td className="border p-3">{month}</td>
+                    <td className="border p-3">₹{monthData.total.toFixed(2)}</td>
+                    <td className="border p-3">₹{monthData.credited.toFixed(2)}</td>
+                    <td className="border p-3">₹{monthData.pending.toFixed(2)}</td>
+                    <td className="border p-3">{monthData.payments}</td>
+                    <td className="border p-3">{monthData.paymentsByLead?.CGFL || 0}</td>
+                    <td className="border p-3">{monthData.paymentsByLead?.SGFL || 0}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
