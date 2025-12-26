@@ -106,7 +106,8 @@ import Verified from "./Components/Verified";
 import ReferAndEarn from "./page/ReferAndEarn";
 import LeaderBoard from "./BDA/LeaderBoard";
 
-// MarketingLogin
+// MarketingLogind
+
 import MarketingHeader from "./Marketing/MarketingHeader";
 import MarketingLogin from "./Marketing/MarketingLogin";
 import MarketingDashboard from "./Marketing/MarketingDashboard";
