@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import API from "../API";
 
@@ -68,9 +68,16 @@ const BDARevenueSheet = () => {
   // });
 
 const today = new Date();
+const threeMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 3, 1);
 
 newStudent.forEach((student) => {
   const createdDate = new Date(student.createdAt);
+  
+  // Skip students older than 3 months
+  if (createdDate < threeMonthsAgo) {
+    return;
+  }
+
   const date = createdDate.toLocaleDateString("en-GB");
   const month = createdDate.toLocaleString("default", {
     month: "long",
@@ -128,7 +135,7 @@ function getLastNMonths(n) {
 
   return result;
 }
-const monthsToShow = getLastNMonths(4); // current + last 3 months
+const monthsToShow = getLastNMonths(3); // last 3 months only
 const months = monthsToShow.filter((m) => revenueByMonth[m]); 
 
 
