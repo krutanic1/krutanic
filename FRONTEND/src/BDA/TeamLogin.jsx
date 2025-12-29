@@ -1,9 +1,9 @@
 
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate , Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../API";
-import toast ,{Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const TeamLogin = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ const TeamLogin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
- // Send OTP 
+  // Send OTP 
   const handleSendOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -23,7 +23,7 @@ const TeamLogin = () => {
       setStep(2);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send OTP!");
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -34,16 +34,16 @@ const TeamLogin = () => {
     try {
       const response = await axios.post(`${API}/bdaverifyotp`, { email, otp });
       if (response.status === 200) {
-      toast.success("Login successful!");
-      const loginTime = new Date().getTime();
-      setTimeout(() => {
-      localStorage.setItem("bdaId", response.data.bdaId);
-      localStorage.setItem("bdaName", response.data.bdaName);
-      localStorage.setItem("bdaToken", response.data.token);
-       localStorage.setItem("sessionStartTime", loginTime);
-      navigate("/Home");
-    }, 2000);
-    }
+        toast.success("Login successful!");
+        const loginTime = new Date().getTime();
+        setTimeout(() => {
+          localStorage.setItem("bdaId", response.data.bdaId);
+          localStorage.setItem("bdaName", response.data.bdaName);
+          localStorage.setItem("bdaToken", response.data.token);
+          localStorage.setItem("sessionStartTime", loginTime);
+          navigate("/Home");
+        }, 2000);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to verify OTP!");
     }
@@ -51,7 +51,7 @@ const TeamLogin = () => {
 
   return (
     <div id="loginpage">
-      <Toaster position="top-center" reverseOrder={false}/>
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="loginform">
         <h2>Login With Offical Email Id</h2>
         {step === 1 ? (
@@ -65,7 +65,7 @@ const TeamLogin = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-               <label htmlFor="email">Company Email</label>
+              <label htmlFor="email">Company Email</label>
             </div>
             <div>
               <button disabled={loading} type="submit">{loading ? "Sending..." : "Send OTP"}</button>
@@ -98,4 +98,4 @@ const TeamLogin = () => {
   );
 };
 
-export default TeamLogin ;
+export default TeamLogin;

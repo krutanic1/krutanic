@@ -19,9 +19,9 @@ const User = require("./routes/User");
 const admin = require("./routes/AdminLogin")
 const bodyParser = require("body-parser");
 
-const CreateJob = require("./routes/CreateJob"); 
+const CreateJob = require("./routes/CreateJob");
 const JobApplication = require("./routes/JobApplication")
-const MasterClass = require("./routes/MasterClass") 
+const MasterClass = require("./routes/MasterClass")
 const AddEvent = require("./routes/AddEvent")
 const Certificate = require("./routes/Certificate")
 const ReferAndEarn = require("./routes/ReferAndEarn");
@@ -74,15 +74,15 @@ app.options('*', (req, res) => {
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); 
+      callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin, 'Allowed:', allowedOrigins);
-      callback(new Error('Not allowed by CORS')); 
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(bodyParser.json());
@@ -120,12 +120,12 @@ app.use("/", MasterClass);
 // JobApplication
 app.use("/", JobApplication);
 
-app.use("/",Mockai);
+app.use("/", Mockai);
 
-app.use("/",Excercise);
+app.use("/", Excercise);
 
-app.use("/",Certificate);
-app.use("/",ReferAndEarn);
+app.use("/", Certificate);
+app.use("/", ReferAndEarn);
 
 //AddEvent
 app.use("/", AddEvent);
@@ -148,7 +148,7 @@ module.exports = app;
 // Connect to MongoDB
 mongoose
   .connect(
-   process.env.DB_NAME,
+    process.env.DB_NAME,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connected to MongoDB"))

@@ -135,7 +135,7 @@ const BDAHeader = () => {
           {["LEADER", "MANAGER"].includes(bdaData?.designation) && (
             <>
               <Link to="/AssignTarget">
-              <i className="fa fa-bullseye"></i> Assign Target
+                <i className="fa fa-bullseye"></i> Assign Target
               </Link>
             </>
           )}
