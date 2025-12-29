@@ -7,7 +7,7 @@ const RevenueSheet = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const [selectedLead, setSelectedLead] = useState("CGFL");
+const [selectedLead, setSelectedLead] = useState("All");
 
   const fetchNewStudent = async () => {
     try {
@@ -37,9 +37,16 @@ const [selectedLead, setSelectedLead] = useState("CGFL");
   const revenueByMonth = {};
   let totalRevenue = 0;
 
- 
+  // Filter students based on selected lead
+  const filteredStudents = selectedLead === "All" 
+    ? newStudent 
+    : newStudent.filter(student => {
+        if (selectedLead === "RamCharan") return student.lead === "Ram Charan";
+        if (selectedLead === "Abhilash") return student.lead === "Abhilash";
+        return student.lead === selectedLead;
+      });
 
-  newStudent.forEach((student) => {
+  filteredStudents.forEach((student) => {
     const date = new Date(student.createdAt).toLocaleDateString("en-GB");
     const month = new Date(student.createdAt).toLocaleString("default", {
       month: "long",
@@ -133,7 +140,7 @@ if (student.lead === "CGFL") {
     value={selectedLead}
     onChange={(e) => setSelectedLead(e.target.value)}
   >
-    {/* <option value="all">All</option> */}
+    <option value="All">All</option>
     <option value="CGFL">CGFL</option>
     <option value="SGFL">SGFL</option>
     <option value="RamCharan">Ram Charan</option>
@@ -150,21 +157,16 @@ if (student.lead === "CGFL") {
                 <th className="border p-3 text-left">Credited Revenue</th>
                 <th className="border p-3 text-left">Pending Revenue</th>
                 <th className="border p-3 text-left">Total No Of Payments</th>
-                 {/* <th className="border p-3 text-left">CGFL Payments</th>
-                 <th className="border p-3 text-left">SGFL Payments</th>
-                 <th className="border p-3 text-left">Ram Charan Payments</th>
-               <th className="border p-3 text-left">Abhilash Payments</th> */}
-                 {/* {selectedLead === "all" ? (
-      <>
-        <th className="border p-3 text-left">CGFL Payments</th>
-        <th className="border p-3 text-left">SGFL Payments</th>
-        <th className="border p-3 text-left">Ram Charan Payments</th>
-        <th className="border p-3 text-left">Abhilash Payments</th>
-      </>
-    ) : (
-      <th className="border p-3 text-left">{selectedLead} Payments</th>
-    )} */}
- <th className="border p-3 text-left">{selectedLead} Payments</th>
+                {selectedLead === "All" ? (
+                  <>
+                    <th className="border p-3 text-left">CGFL Payments</th>
+                    <th className="border p-3 text-left">SGFL Payments</th>
+                    <th className="border p-3 text-left">Ram Charan Payments</th>
+                    <th className="border p-3 text-left">Abhilash Payments</th>
+                  </>
+                ) : (
+                  <th className="border p-3 text-left">{selectedLead} Payments</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -175,25 +177,18 @@ if (student.lead === "CGFL") {
                   <td className="border p-3">₹{data.credited.toFixed(2)}</td>
                   <td className="border p-3">₹{data.pending.toFixed(2)}</td>
                   <td className="border p-3">{revenueByDay[date].payments}</td>
-                  {/* <td className="border p-3">{data.paymentsByLead?.CGFL || 0}</td>
-                  <td className="border p-3">{data.paymentsByLead?.SGFL || 0}</td>
-                  <td className="border p-3">{data.paymentsByLead?.RamCharan || 0}</td>
-                  <td className="border p-3">{data.paymentsByLead?.Abhilash || 0}</td> */}
-                  {/* {selectedLead === "all" ? (
-        <>
-          <td className="border p-3">{data.paymentsByLead?.CGFL || 0}</td>
-          <td className="border p-3">{data.paymentsByLead?.SGFL || 0}</td>
-          <td className="border p-3">{data.paymentsByLead?.RamCharan || 0}</td>
-          <td className="border p-3">{data.paymentsByLead?.Abhilash || 0}</td>
-        </>
-      ) : (
-        <td className="border p-3">
-          {data.paymentsByLead?.[selectedLead] || 0}
-        </td>
-      )} */}
- <td className="border p-3">
-        {data.paymentsByLead?.[selectedLead] || 0}
-      </td>
+                  {selectedLead === "All" ? (
+                    <>
+                      <td className="border p-3">{data.paymentsByLead?.CGFL || 0}</td>
+                      <td className="border p-3">{data.paymentsByLead?.SGFL || 0}</td>
+                      <td className="border p-3">{data.paymentsByLead?.RamCharan || 0}</td>
+                      <td className="border p-3">{data.paymentsByLead?.Abhilash || 0}</td>
+                    </>
+                  ) : (
+                    <td className="border p-3">
+                      {data.paymentsByLead?.[selectedLead] || 0}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -214,11 +209,13 @@ if (student.lead === "CGFL") {
                 <th className="border p-3 text-left">Total No Of Payments</th>
                 <th className="border p-3 text-left">CGFL Payments</th>
                 <th className="border p-3 text-left">SGFL Payments</th>
+                <th className="border p-3 text-left">Ram Charan Payments</th>
+                <th className="border p-3 text-left">Abhilash Payments</th>
               </tr>
             </thead>
             <tbody>
               {months.map((month, index) => {
-                const monthData = revenueByMonth[month] || { total: 0, credited: 0, pending: 0, payments: 0, paymentsByLead: { CGFL: 0, SGFL: 0 } };
+                const monthData = revenueByMonth[month] || { total: 0, credited: 0, pending: 0, payments: 0, paymentsByLead: { CGFL: 0, SGFL: 0, RamCharan: 0, Abhilash: 0 } };
                 return (
                   <tr key={month} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
                     <td className="border p-3">{month}</td>
@@ -228,6 +225,8 @@ if (student.lead === "CGFL") {
                     <td className="border p-3">{monthData.payments}</td>
                     <td className="border p-3">{monthData.paymentsByLead?.CGFL || 0}</td>
                     <td className="border p-3">{monthData.paymentsByLead?.SGFL || 0}</td>
+                    <td className="border p-3">{monthData.paymentsByLead?.RamCharan || 0}</td>
+                    <td className="border p-3">{monthData.paymentsByLead?.Abhilash || 0}</td>
                   </tr>
                 );
               })}
