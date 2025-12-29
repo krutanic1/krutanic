@@ -102,10 +102,10 @@ const AdminLogIn = () => {
           >
             {isOtpSent ? "Verify OTP" : "Send OTP"}
           </button>
-          <p>--------------------or--------------------</p>
+          {/* <p>--------------------or--------------------</p>
         <div className="loginwith">
           <Link to="/LoginAdmin">Login with password</Link>
-        </div>
+        </div> */}
           
           </div>
         </div>
